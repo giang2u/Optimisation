@@ -35,12 +35,12 @@ public class Optimisation {
 		
 		RecuitSimule rc = new RecuitSimule();
 		
-		ArrayList<Processeur> p = rc.recuitSimule(lt, 3, 1000000);
+		ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
 		
 		for ( Processeur pp : p) {
 			
 		System.out.println("\nproc  " + pp.getDuree());
-		for ( Tache tt : pp.getLproc()) {
+		for ( Tache tt : pp.getListTache()) {
 			System.out.print("   Tache  " + tt.getDuree());
 		}
 		}

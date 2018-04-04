@@ -1,6 +1,7 @@
 package Algo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Model.Processeur;
 import Model.Tache;
@@ -9,18 +10,24 @@ public class Tabou {
 
 	protected ArrayList<Processeur> lproc;
 	protected ArrayList<Tache> ltache;
+	protected HashMap<Processeur,ArrayList<Tache>> listTabou;
+	protected int taille;
 
 
-	public Tabou() {
+	public Tabou(int taille) {
 		lproc = new ArrayList<>();
 		ltache = new ArrayList<>();
+		this.taille = taille;
+		this.listTabou = new HashMap<Processeur, ArrayList<Tache>>(taille);
 	}
 
-	public Tabou(int temp, ArrayList<Processeur> lproc,ArrayList<Tache> ltache) {
+	public Tabou(int taille, ArrayList<Processeur> lproc,ArrayList<Tache> ltache) {
 		lproc = new ArrayList<>();
 		ltache = new ArrayList<>();
 		this.lproc = lproc;
 		this.ltache = ltache;
+		this.taille = taille;
+		this.listTabou = new HashMap<Processeur, ArrayList<Tache>>(taille);
 	}	
 
 	public ArrayList<Processeur> tabou(ArrayList<Tache> t, int nbProc, int iter) {
@@ -99,6 +106,18 @@ public class Tabou {
 
 		return lproc;
 	}
+	
+	
+	
+	
+	public void insertTabout(Processeur proc, ArrayList<Tache> lTache){
+		this.listTabou.put(proc, lTache);
+	}
+	
+	public void updateConfiguration(ArrayList<Tache> listTache){
+		this.ltache = listTache;
+	}
+	
 
 	public ArrayList<Tache> getLtache() {
 		return ltache;
@@ -116,19 +135,25 @@ public class Tabou {
 		this.lproc = lproc;
 	}
 	
-	public int objectifOptiL3(ArrayList<Processeur> proc) {
-		
-		// calcul  du plus long chemin
-		int max = Integer.MIN_VALUE;
-		int courant = 0;
-		for (Processeur p : proc) {
-			
-			for ( Tache t : p.getLproc()) {
-				courant+=t.getDuree();
+	
+	public Tache selectMeilleurVoisin(int i) {
+		return this.ltache.get(i);
+	}
+	
+	
+	//recupere la tache avec la durre max dans un processeur
+	public int evaluationVoisin(Processeur p){
+		//int i = (int)(Math.random() * (this.lproc.size() - 0));
+		int tacheIndix = 0;
+		int dureMax = 0;
+		for(int i = 0; i < p.getListTache().size();++i){
+			if(p.getListTache().get(i).getDuree() > dureMax){
+				dureMax = p.getListTache().get(i).getDuree();
+				tacheIndix = i;
 			}
-			if ( max < courant) max = courant;
 		}
-		return max;
+	
+		return tacheIndix;
 	}
 
 

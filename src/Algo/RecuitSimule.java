@@ -114,7 +114,7 @@ public class RecuitSimule {
 					}*/
 					// Regle dacceptation
 					if ( variation < 0  || ( variation > 0 && Math.random() < Math.exp(-variation / i) )) {
-						System.out.println(" RANDOM  " + Math.random() + "     Variatio   " + variation + "      EXP " + Math.exp(-variation / i));
+						//System.out.println(" RANDOM  " + Math.random() + "     Variatio   " + variation + "      EXP " + Math.exp(-variation / i));
 						lproc = procCourant;
 					}
 					i = i*alpha; 
@@ -155,7 +155,7 @@ public class RecuitSimule {
 
 		for ( Processeur pro : proc) {
 			p.add(new Processeur());
-			for (Tache task : pro.getLproc()) {
+			for (Tache task : pro.getListTache()) {
 				int k = task.getDuree();
 				p.get(i).add(new Tache(k ));
 			}
@@ -201,27 +201,27 @@ public class RecuitSimule {
 		for (int i =0; i < p.size(); i++) {
 
 			// inversion de 2elements
-			if (Math.random() > 0.75 && p.get(i).getLproc().size() > 1) {
+			if (Math.random() > 0.75 && p.get(i).getListTache().size() > 1) {
 
-				size = p.get(i).getLproc().size();
+				size = p.get(i).getListTache().size();
 
 				proc1 =  0 + (int)(Math.random() * (size - 0));
 
 
 
-				t = p.get(i).getLproc().get(proc1);
+				t = p.get(i).getListTache().get(proc1);
 
 				// inversion r et son voisin r+1
 				if ( Math.random() <  0.5  ) {
 					if ( proc1 < size-1) {
-						p.get(i).getLproc().set(proc1, p.get(i).getLproc().get( (proc1+1) ));
-						p.get(i).getLproc().set((proc1+1) , t);
+						p.get(i).getListTache().set(proc1, p.get(i).getListTache().get( (proc1+1) ));
+						p.get(i).getListTache().set((proc1+1) , t);
 					} 
 				} else {
 					// inversion r et son voisin r-1
 					if ( proc1 > 0) {
-						p.get(i).getLproc().set(proc1, p.get(i).getLproc().get( (proc1-1) ));
-						p.get(i).getLproc().set((proc1-1) , t);
+						p.get(i).getListTache().set(proc1, p.get(i).getListTache().get( (proc1-1) ));
+						p.get(i).getListTache().set((proc1-1) , t);
 					} 
 				}
 			}
@@ -238,7 +238,7 @@ public class RecuitSimule {
 		size = p.size();
 		boolean vide = true;
 		while (i < p.size() && vide) {
-			if (p.get(i).getLproc().size() > 0) vide = false;
+			if (p.get(i).getListTache().size() > 0) vide = false;
 			i++;
 		}
 
@@ -246,17 +246,17 @@ public class RecuitSimule {
 
 			proc1 =  0 + (int)(Math.random() * (size - 0));
 			i = 0;
-			while (p.get(proc1).getLproc().size() ==0)  {
+			while (p.get(proc1).getListTache().size() ==0)  {
 				proc1 =  0 + (int)(Math.random() * (size - 0));
 				i++;
 			}
 
-			rr = 0 + (int)(Math.random() * (p.get(proc1).getLproc().size() - 0));
+			rr = 0 + (int)(Math.random() * (p.get(proc1).getListTache().size() - 0));
 
-			t = p.get(proc1).getLproc().get(rr);
+			t = p.get(proc1).getListTache().get(rr);
 
 
-			p.get(proc1).getLproc().remove(rr);
+			p.get(proc1).getListTache().remove(rr);
 
 			proc2 =  0 + (int)(Math.random() * (size - 0));
 
@@ -265,7 +265,7 @@ public class RecuitSimule {
 				i++;
 			}
 
-			p.get(proc2).getLproc().add(t);
+			p.get(proc2).getListTache().add(t);
 		}
 
 	}
@@ -284,7 +284,7 @@ public class RecuitSimule {
 
 		proc1 =  0 + (int)(Math.random() * (size - 0));
 
-		while (p.get(proc1).getLproc().size() > 0 && i < p.size())  {
+		while (p.get(proc1).getListTache().size() > 0 && i < p.size())  {
 			proc1 =  0 + (int)(Math.random() * (size - 0));
 			i++;
 		}
@@ -292,16 +292,16 @@ public class RecuitSimule {
 		proc2 =  0 + (int)(Math.random() * (size - 0));
 
 
-		while ( proc2 == proc1 && p.get(proc2).getLproc().size() > 0 && i < p.size()) {
+		while ( proc2 == proc1 && p.get(proc2).getListTache().size() > 0 && i < p.size()) {
 			proc2 =  0 + (int)(Math.random() * (size - 0));
 			i++;
 		}
 
-		if (p.get(proc1).getLproc().size() >0  && p.get(proc2).getLproc().size() > 0) {
+		if (p.get(proc1).getListTache().size() >0  && p.get(proc2).getListTache().size() > 0) {
 			//System.out.println(" WELLOU 2");
-			r = 0 + (int)(Math.random() * (p.get(proc1).getLproc().size() - 0));
+			r = 0 + (int)(Math.random() * (p.get(proc1).getListTache().size() - 0));
 
-			t = p.get(proc1).getLproc().get(r);
+			t = p.get(proc1).getListTache().get(r);
 
 
 
@@ -310,17 +310,17 @@ public class RecuitSimule {
 
 
 			// si lemplacement r est plus grand que la taille du proc2 on ajoute a la fin
-			if ( r >= p.get(proc2).getLproc().size()) {
-				size = p.get(proc2).getLproc().size()-1;
-				t2 = p.get(proc2).getLproc().get( size);
-				p.get(proc2).getLproc().remove(size);
-				p.get(proc2).getLproc().add(t);
+			if ( r >= p.get(proc2).getListTache().size()) {
+				size = p.get(proc2).getListTache().size()-1;
+				t2 = p.get(proc2).getListTache().get( size);
+				p.get(proc2).getListTache().remove(size);
+				p.get(proc2).getListTache().add(t);
 			} else {
-				t2 = p.get(proc2).getLproc().get(r);
-				p.get(proc2).getLproc().set(r, t);
+				t2 = p.get(proc2).getListTache().get(r);
+				p.get(proc2).getListTache().set(r, t);
 			}
 
-			p.get(proc1).getLproc().set(r, t2);
+			p.get(proc1).getListTache().set(r, t2);
 
 
 		}

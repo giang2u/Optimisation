@@ -4,35 +4,35 @@ import java.util.ArrayList;
 
 public class Processeur {
 	
-	protected ArrayList<Tache> lproc;
+	protected ArrayList<Tache> lTache;
 	
 	public Processeur(ArrayList<Tache> lproc) {
-		this.lproc = lproc;
+		this.lTache = lproc;
 	}
 	
 	public Processeur() {
-		this.lproc = new ArrayList<>();
+		this.lTache = new ArrayList<>();
 	}
 
-	public ArrayList<Tache> getLproc() {
-		return lproc;
+	public ArrayList<Tache> getListTache() {
+		return lTache;
 	}
 
 	public void setLproc(ArrayList<Tache> lproc) {
-		this.lproc = lproc;
+		this.lTache = lproc;
 	}
 	
 	public void add(Tache t) {
-		this.lproc.add(t);
+		this.lTache.add(t);
 	}
 	
 	public void remove(int i) {
-		this.lproc.remove(i);
+		this.lTache.remove(i);
 	}
 	
 	public int getDuree() {
 		int duree= 0;
-		for ( Tache t : lproc) {
+		for ( Tache t : lTache) {
 			duree+= t.getDuree();
 		}
 		return duree;
