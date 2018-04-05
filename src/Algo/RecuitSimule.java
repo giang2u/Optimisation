@@ -31,103 +31,41 @@ public class RecuitSimule {
 		double alpha = 0.95;
 
 		// LPROC MEILLEURE SOLUTION
-
 		lproc = new ArrayList<>();
-		if ( nbProc > 0) {
+		ArrayList<Processeur> lmax = new ArrayList<>();
 
-			if (nbProc == 1) {
-				this.lproc.add(new Processeur());
-				for (Tache tt : t) {
-					// solution init on met tous dans un seul proc
-					this.lproc.get(0).add(tt);;
-				}
-			} else {
-
-
-				// SOLUTION INIT on repartit les taches equitablement
-				for ( int i = 0 ;  i < nbProc; i++) {
-					this.lproc.add(new Processeur());
-				}
-
-				// nombre delement dans chaque proc
-				int nb =  t.size()/nbProc;
-
-				//System.out.println("NOMBRE   " + nb);
-				int j = 0, k = 0;
-
-				// on met dans nbProc - 1 , nb tache
-				for (int i = 0;   i < (nbProc -1); i++) {
-					// borne darret
-					k = i*nb + nb;
-
-					for (j = (k-nb); j < k ; j++) {
-
-						this.lproc.get(i).add(t.get( j ));
-					}
-				}
-
-				System.out.println("nbproc "+ lproc.size());
-				// dans le dernier proc on met le reste  car possibilite de dimpair
-
-				for (int i = k;  i < t.size(); i++) {
-					this.lproc.get(nbProc-1).add(t.get(i));
-
-				}
-
-
-				// temperature init
-				this.temperature = temp;
-
-				double i=temp;
-				boolean fige = false;
-
-				while (i > 1) {
-
-
-
-
-					// Modif elementaire
-					ArrayList<Processeur> procCourant =  voisin(lproc);
-
-
-
-					int variation = objectifOptiL3(procCourant) - objectifOptiL3(lproc);
-					/*	if ( i == 100000) {
-						System.out.println(" \n    Variationoooooooo " + variation);
-						for ( Processeur pp : procCourant) {
-
-							System.out.println("\nproc COURANT  " + pp.getDuree());
-							for ( Tache tt : pp.getLproc()) {
-								System.out.print("    Tache  " + tt.getDuree());
-							}
-						}
-
-						for ( Processeur ppp : lproc) {
-
-							System.out.println("\nproc PAS COURANT  " + ppp.getDuree());
-							for ( Tache ttt : ppp.getLproc()) {
-								System.out.print("    Tache  " + ttt.getDuree());
-							}
-						}
-
-
-					}*/
-					// Regle dacceptation
-					if ( variation < 0  || ( variation > 0 && Math.random() < Math.exp(-variation / i) )) {
-						//System.out.println(" RANDOM  " + Math.random() + "     Variatio   " + variation + "      EXP " + Math.exp(-variation / i));
-						lproc = procCourant;
-					}
-					i = i*alpha; 
-				}
-			}
+		for (int i = 0; i < nbProc; i++)
+		{
+			this.lproc.add(new Processeur());
+			lmax.add(new Processeur());
 		}
-		/*for ( Processeur pp : lproc) {
+		for (Tache tt : t) {
+			// solution init on met tous dans un seul proc
+			this.lproc.get(0).add(tt);
+			lmax.get(0).add(tt);
+		}
 
-			System.out.println("\nproc PAS COURANT  " + pp.getDuree());
-			for ( Tache tt : pp.getLproc()) {
-				System.out.print("    Tache  " + tt.getDuree());
+		// temperature init
+		this.temperature = temp;
+
+		double i=temp;
+
+		while (i > 1) {
+			// Modif elementaire
+			ArrayList<Processeur> procCourant =  voisin(lmax);
+
+			int variation = objectifOptiL3(procCourant) - objectifOptiL3(lmax);
+
+			// Regle dacceptation
+			if ( variation < 0  || ( variation > 0 && Math.random() < Math.exp(-variation / i) )) {
+				//System.out.println(" RANDOM  " + Math.random() + "     Variatio   " + variation + "      EXP " + Math.exp(-variation / i));
+				lmax = procCourant;
 			}
-		}*/
+			if ( objectifOptiL3(lproc) >  objectifOptiL3(lmax) ) {
+				lproc = lmax;
+			}
+			i = i*alpha; 
+		}
 
 		return lproc;
 	}
@@ -176,7 +114,7 @@ public class RecuitSimule {
 			if (Math.random() < 0.5) {
 				inversion(p);
 			}
-			
+
 			if (Math.random() > 0.5) {
 				enlevage(p);
 				compt++;
@@ -185,7 +123,7 @@ public class RecuitSimule {
 				echange(p);
 				compt++;
 			}
-			
+
 
 		}
 		return p;
@@ -302,11 +240,6 @@ public class RecuitSimule {
 			r = 0 + (int)(Math.random() * (p.get(proc1).getListTache().size() - 0));
 
 			t = p.get(proc1).getListTache().get(r);
-
-
-
-
-
 
 
 			// si lemplacement r est plus grand que la taille du proc2 on ajoute a la fin

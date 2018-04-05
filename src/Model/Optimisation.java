@@ -35,7 +35,7 @@ public class Optimisation {
 		
 		RecuitSimule rc = new RecuitSimule();
 		
-		ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
+		ArrayList<Processeur> p = rc.recuitSimule(lt, 2, 1000000);
 		
 		for ( Processeur pp : p) {
 			
