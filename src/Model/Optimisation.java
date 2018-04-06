@@ -41,6 +41,7 @@ public class Optimisation {
 		int taille = sc.nextInt();
 		
 
+
 		System.out.println("Nombre de Processeur!");
 		Scanner scp = new Scanner(System.in);
 		int nbProc = scp.nextInt();
@@ -59,6 +60,8 @@ public class Optimisation {
 		tabou.tabou();
 		
 		/*ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
+
+		ArrayList<Processeur> p = rc.recuitSimule(lt, 2, 1000000);
 		
 		for ( Processeur pp : p) {
 			
