@@ -35,29 +35,78 @@ public class Optimisation {
 		lt.add(t9);
 		lt.add(t10);*/
 		
-		RecuitSimule rc = new RecuitSimule();
-		System.out.println("La taille de la liste de tabou!");
-		Scanner sc = new Scanner(System.in);
-		int taille = sc.nextInt();
 		
+		
+		System.out.println("Choisissez votre Algo 1 pour Tabou ou 2 pour Recuit simule:");
+		Scanner scinit = new Scanner(System.in);
+		int choix = scinit.nextInt();
+		
+		
+		switch(choix) { 
+		case 1:
+			System.out.println("La taille de la liste de tabou!");
+			Scanner sc = new Scanner(System.in);
+			int taille = sc.nextInt();
+			
 
 
-		System.out.println("Nombre de Processeur!");
-		Scanner scp = new Scanner(System.in);
-		int nbProc = scp.nextInt();
-		
+			System.out.println("Nombre de Processeur!");
+			Scanner scp = new Scanner(System.in);
+			int nbProc = scp.nextInt();
+			
 
-		System.out.println("Nombre de Tache!");
-		Scanner sct = new Scanner(System.in);
-		int nbTache = sct.nextInt();
-		
+			System.out.println("Nombre de Tache!");
+			Scanner sct = new Scanner(System.in);
+			int nbTache = sct.nextInt();
+			
 
-		System.out.println("Nombre d'iteration!");
-		Scanner sci = new Scanner(System.in);
-		int iter = sct.nextInt();
+			System.out.println("Nombre d'iteration!");
+			Scanner sci = new Scanner(System.in);
+			int iter = sct.nextInt();
+			
+			Tabou tabou = new Tabou(taille, nbProc, nbTache, iter);
+			tabou.tabou();
+			break;
+		case 2: 
+			System.out.println("Valeur de la temperature:");
+			Scanner scRecuit = new Scanner(System.in);
+			int temp = scRecuit.nextInt();
+			
+
+
+			System.out.println("Nombre de Processeur!");
+			scRecuit = new Scanner(System.in);
+			int nbProcRecuit = scRecuit.nextInt();
+			
+
+			System.out.println("Nombre de Tache!");
+			scRecuit = new Scanner(System.in);
+			int nbTacheRecuit = scRecuit.nextInt();
+			
+			
+			System.out.println("Definition des bornes pour les valeurs des taches:");
+			System.out.println("Valeur minimale:");
+			scRecuit = new Scanner(System.in);
+			int borneInferieur = scRecuit.nextInt();
+			
+			System.out.println("Valeur maximale:");
+			scRecuit = new Scanner(System.in);
+			int borneSuperieur = scRecuit.nextInt();
+			
+			
+			RecuitSimule rc = new RecuitSimule();
+			ArrayList<Processeur> p = rc.recuitSimule(nbTacheRecuit, nbProcRecuit, temp, borneInferieur, borneSuperieur);
+			
+			for ( Processeur pp : p) {
+				
+			System.out.println("\nproc  " + pp.getDuree());
+			for ( Tache tt : pp.getListTache()) {
+				System.out.print("   Tache  " + tt.getDuree());
+			}
+			}
 		
-		Tabou tabou = new Tabou(taille, nbProc, nbTache, iter);
-		tabou.tabou();
+		}
+		
 		
 		/*ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
 

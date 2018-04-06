@@ -7,48 +7,60 @@ import Model.Tache;
 
 public class RecuitSimule {
 
-	protected int temperature;
+	protected double temperature;
 	protected ArrayList<Processeur> lproc;
-	protected ArrayList<Tache> ltache;
+	protected int borneInf, borneSup, nbProc, nbTache;
 
 
 	public RecuitSimule() {
-		this.temperature = 0;
+		this.temperature = 5000;
 		lproc = new ArrayList<>();
-		ltache = new ArrayList<>();
+		borneInf=0;
+		borneSup = 10;
+		nbTache = 10;
+		nbProc = 2;
 	}
 
-	public RecuitSimule(int temp, ArrayList<Processeur> lproc,ArrayList<Tache> ltache) {
+	public RecuitSimule(int temp, ArrayList<Processeur> lproc) {
 		this.temperature = temp;
 		lproc = new ArrayList<>();
-		ltache = new ArrayList<>();
 		this.lproc = lproc;
-		this.ltache = ltache;
 	}	
+	
+	public ArrayList<Processeur> recuitSimule(int nbTache, int nbProc, int temp, int borneInf, int borneSup) {
 
-	public ArrayList<Processeur> recuitSimule(ArrayList<Tache> t, int nbProc, int temp) {
-
-		double alpha = 0.95;
-
+		double alpha = 0.99;
+		int compteur= 0;
 		// LPROC MEILLEURE SOLUTION
 		lproc = new ArrayList<>();
 		ArrayList<Processeur> lmax = new ArrayList<>();
+		this.borneInf = borneInf;
+		this.borneSup = borneSup;
+		this.nbTache = nbTache;
+		this.nbProc = nbProc;
+		
+		//System.out.println( " bonre SUPPE " + borneSup + "    borneInf  " + borneInf);
 
-		for (int i = 0; i < nbProc; i++)
+		for (int i = 0; i < this.nbProc; i++)
 		{
 			this.lproc.add(new Processeur());
 			lmax.add(new Processeur());
 		}
-		for (Tache tt : t) {
-			// solution init on met tous dans un seul proc
-			this.lproc.get(0).add(tt);
-			lmax.get(0).add(tt);
+		
+		for (int i = 0; i < this.nbTache; i++)
+		{
+			
+			int range = this.borneSup-this.borneInf;
+			int duree = (int)(Math.random() * (range)) + this.borneInf;
+			
+			this.lproc.get(0).add(new Tache(duree));
+			lmax.get(0).add(new Tache(duree));
 		}
 
 		// temperature init
 		this.temperature = temp;
 
-		double i=temp;
+		double i=this.temperature;
 
 		while (i > 1) {
 			// Modif elementaire
@@ -64,11 +76,13 @@ public class RecuitSimule {
 			if ( objectifOptiL3(lproc) >  objectifOptiL3(lmax) ) {
 				lproc = lmax;
 			}
+			compteur++;
 			i = i*alpha; 
 		}
-
+		System.out.println(" Nombre d'itération recuit " + compteur);
 		return lproc;
 	}
+
 
 
 	public int objectifOptiL3(ArrayList<Processeur> proc) {
@@ -260,19 +274,12 @@ public class RecuitSimule {
 
 	}
 
-	public ArrayList<Tache> getLtache() {
-		return ltache;
-	}
 
-	public void setLtache(ArrayList<Tache> ltache) {
-		this.ltache = ltache;
-	}
-
-	public int getTemperature() {
+	public double getTemperature() {
 		return temperature;
 	}
 
-	public void setTemperature(int temperature) {
+	public void setTemperature(double temperature) {
 		this.temperature = temperature;
 	}
 
@@ -283,6 +290,40 @@ public class RecuitSimule {
 	public void setLproc(ArrayList<Processeur> lproc) {
 		this.lproc = lproc;
 	}
+	
+
+	public int getBorneInf() {
+		return borneInf;
+	}
+
+	public void setBorneInf(int borneInf) {
+		this.borneInf = borneInf;
+	}
+
+	public int getBorneSup() {
+		return borneSup;
+	}
+
+	public void setBorneSup(int borneSup) {
+		this.borneSup = borneSup;
+	}
+
+	public int getNbProc() {
+		return nbProc;
+	}
+
+	public void setNbProc(int nbProc) {
+		this.nbProc = nbProc;
+	}
+
+	public int getNbTache() {
+		return nbTache;
+	}
+
+	public void setNbTache(int nbTache) {
+		this.nbTache = nbTache;
+	}
+
 
 
 
