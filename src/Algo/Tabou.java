@@ -15,7 +15,6 @@ public class Tabou {
 	protected ArrayList<Tache> ltache;
 	protected ArrayList<Processeur[]> listTabou;
 	protected ArrayList<Processeur[]> listVoisin;
-	protected HashMap<Processeur,ArrayList<Tache>> meilleurConfig;
 	protected Processeur[] tabProc;
 	protected int taille;
 	protected int iteration;
@@ -46,11 +45,11 @@ public class Tabou {
 		}
 		
 		for(int j = 0; j < this.nbTache; j++){
-			//System.out.println("Duree de la tache " + j);
-			//Scanner sci = new Scanner(System.in);
-			//int dure = sci.nextInt();
-			//Tache t = new Tache(dure, j);
-			Tache t = new Tache(5, j);
+			System.out.println("Duree de la tache " + j);
+			Scanner sci = new Scanner(System.in);
+			int dure = sci.nextInt();
+			Tache t = new Tache(dure, j);
+			//Tache t = new Tache(5, j);
 			this.ltache.add(t);
 		}
 		
@@ -88,27 +87,23 @@ public class Tabou {
 	}
 	
 	public void affichage() {
-		
 		for(Processeur p : this.lproc){
-			System.out.println("Processeur " + p.getNomProcesseur());
-			for(Tache t : p.getListTache()){
-				System.out.print("	Tache " + t.getNumeroTache() +": " + t.getDuree());
+			if(p!=null){
+				System.out.println("Processeur " + p.getNomProcesseur());
+				for(Tache t : p.getListTache()){
+					System.out.print("	Tache " + t.getNumeroTache() +": " + t.getDuree());
+				}
+				System.out.println();
 			}
-			System.out.println();
 		}
 
-		System.out.println(this.cMax(lproc) + " END");
+		System.out.println(cMax(lproc) + " END");
 	}
 	
 	public void selectTache(){
 		insertTabou();
 		int indiceProcSelectEmi = getProcesseurDurreMax();
 		int indiceProcSelectRecu = getProcesseurDurreMin();
-		/*while (indiceProcSelectEmi == indiceProcSelectRecu || this.lproc.get(indiceProcSelectEmi).getListTache().size() == 0){
-			indiceProcSelectEmi = (int)(Math.random() * (this.lproc.size() - 0));
-			indiceProcSelectRecu = (int)(Math.random() * (this.lproc.size() - 0));
-			
-		}*/
 
 		int indiceTacheSelect = (int)(Math.random() * (this.lproc.get(indiceProcSelectEmi).getListTache().size() - 0));
 		
@@ -120,12 +115,15 @@ public class Tabou {
 			tabVoisin[i] = this.lproc.get(i);
 					
 		}
-		this.listVoisin.add(tabVoisin);
-		//updateState(tabVoisin);
+		//Processeur[] tabVoisin =  new Processeur[this.nbProc];
+		this.tabProc = meilleurVoisin(listVoisin);
+
+		//this.listVoisin.add(tabVoisin);
 		
 		
 	}
 	
+
 	public int getProcesseurDurreMax(){
 		int indice = 0;
 		int max = 0;
@@ -142,7 +140,7 @@ public class Tabou {
 		int indice = 0;
 		int min = this.lproc.get(0).getDuree(); ;
 		for(int i = 0; i < this.lproc.size(); ++i){
-			if(this.lproc.get(i).getDuree() <= min){
+			if(this.lproc.get(i).getDuree() < min){
 				min = this.lproc.get(i).getDuree();
 				indice = i;
 			}
@@ -151,41 +149,18 @@ public class Tabou {
 	}
 	
 	
-	public void updateState(Processeur[] tabProc){
-		this.lproc.clear();
-		for(int i = 0; i < this.nbProc ; ++i){
-			this.lproc.add(tabProc[i]);
-		}
-		
-	}
-	
 	public void insertTabou(){
 		for(int i = 0; i < nbProc ; ++i){
 			tabProc[i] = this.lproc.get(i);
 		}
 		this.listTabou.add(tabProc);
-		
-		/*for(int i = 0; i < this.listTabou.size() ; i++){
-			for(int j = 0 ; j < this.listTabou.get(i).length; ++j ){
-				System.out.println("\n Processeur tabou " + this.listTabou.get(i)[j].getNomProcesseur());
-				for(Tache t: this.listTabou.get(i)[j].getListTache() ){
-					System.out.print("	Tache tabou " + t.getNumeroTache() +": " + t.getDuree());
-				}
-				
-			}
-			System.out.println();
-		}*/
+
 	}
 	
 	public void ajouterVoisin(Tache tache , int i, int j, ArrayList<Processeur> listproc){
-		if(!listproc.get(j).getListTache().contains(tache)){
-			listproc.get(j).add(tache);
-		}
+		listproc.get(j).add(tache);
 	}
 	
-	public void updateConfiguration(Processeur p,ArrayList<Tache> listTache){
-		meilleurConfig.put(p, listTache);
-	}
 	
 
 	public ArrayList<Tache> getLtache() {
@@ -205,24 +180,37 @@ public class Tabou {
 	}
 	
 	
-	public Tache selectMeilleurVoisin(int i) {
-		return this.ltache.get(i);
-	}
 	
-	
-	//recupere la tache avec la durre max dans un processeur
-	public int evaluationVoisin(Processeur p){
-		//int i = (int)(Math.random() * (this.lproc.size() - 0));
-		int tacheIndix = 0;
-		int dureMax = 0;
-		for(int i = 0; i < p.getListTache().size();++i){
-			if(p.getListTache().get(i).getDuree() > dureMax){
-				dureMax = p.getListTache().get(i).getDuree();
-				tacheIndix = i;
+	public boolean estTabou(Processeur[] meilleurTab){
+		boolean estTabou = false;
+		
+		for(int i = 0 ; i < listTabou.size();++i){
+			if(listTabou.get(i).length == meilleurTab.length){
+				for(int j = 0 ;  j < meilleurTab.length; j++){
+					if(listTabou.get(i)[j] == meilleurTab[j]){
+						estTabou = true;
+					}
+				}
+				
 			}
 		}
-	
-		return tacheIndix;
+		
+		return estTabou;
+	}
+
+	//recupere la tache avec la durre max dans un processeur
+	public Processeur[] meilleurVoisin(ArrayList<Processeur[]> tabProc){
+		Processeur[] meilleurTab = new Processeur[this.nbProc];
+		for(int i = 0 ; i < tabProc.size(); ++i){
+			for(int j = 0 ; j < tabProc.get(i).length; j++){
+				if(tabProc.get(i)[j].getDuree() < cMax(lproc)){
+					if(!estTabou(tabProc.get(i))){
+						meilleurTab = tabProc.get(i);
+					}
+				}
+			}
+		}
+		return meilleurTab;
 	}
 
 
