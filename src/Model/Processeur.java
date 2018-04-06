@@ -3,7 +3,7 @@ package Model;
 import java.util.ArrayList;
 
 public class Processeur {
-	
+	protected int nomProcesseur;
 	protected ArrayList<Tache> lTache;
 	
 	public Processeur(ArrayList<Tache> lproc) {
@@ -11,6 +11,11 @@ public class Processeur {
 	}
 	
 	public Processeur() {
+		this.lTache = new ArrayList<>();
+	}
+	
+	public Processeur(int i) {
+		this.nomProcesseur = i;
 		this.lTache = new ArrayList<>();
 	}
 
@@ -37,5 +42,22 @@ public class Processeur {
 		}
 		return duree;
 	}
+
+	public int getNomProcesseur() {
+		return nomProcesseur;
+	}
+
+	public void setNomProcesseur(int nomProcesseur) {
+		this.nomProcesseur = nomProcesseur;
+	}
+
+	public ArrayList<Tache> getlTache() {
+		return lTache;
+	}
+
+	public void setlTache(ArrayList<Tache> lTache) {
+		this.lTache = lTache;
+	}
+	
 
 }

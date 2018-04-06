@@ -1,8 +1,10 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import Algo.RecuitSimule;
+import Algo.Tabou;
 
 public class Optimisation {
 
@@ -34,8 +36,29 @@ public class Optimisation {
 		lt.add(t10);*/
 		
 		RecuitSimule rc = new RecuitSimule();
+		System.out.println("La taille de la liste de tabou!");
+		Scanner sc = new Scanner(System.in);
+		int taille = sc.nextInt();
 		
-		ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
+
+		System.out.println("Nombre de Processeur!");
+		Scanner scp = new Scanner(System.in);
+		int nbProc = scp.nextInt();
+		
+
+		System.out.println("Nombre de Tache!");
+		Scanner sct = new Scanner(System.in);
+		int nbTache = sct.nextInt();
+		
+
+		System.out.println("Nombre d'iteration!");
+		Scanner sci = new Scanner(System.in);
+		int iter = sct.nextInt();
+		
+		Tabou tabou = new Tabou(taille, nbProc, nbTache, iter);
+		tabou.tabou();
+		
+		/*ArrayList<Processeur> p = rc.recuitSimule(lt, 6, 1000000);
 		
 		for ( Processeur pp : p) {
 			
@@ -43,7 +66,7 @@ public class Optimisation {
 		for ( Tache tt : pp.getListTache()) {
 			System.out.print("   Tache  " + tt.getDuree());
 		}
-		}
+		}*/
 		
 
 	}
