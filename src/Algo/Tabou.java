@@ -16,6 +16,7 @@ public class Tabou {
 	protected ArrayList<Processeur[]> listTabou;
 	protected ArrayList<Processeur[]> listVoisin;
 	protected HashMap<Processeur,ArrayList<Tache>> meilleurConfig;
+	protected Processeur[] tabProc;
 	protected int taille;
 	protected int iteration;
 	protected int nbProc;
@@ -31,6 +32,7 @@ public class Tabou {
 		this.ltache = new ArrayList<>(nbTache);
 		this.listTabou = new ArrayList<Processeur[]>(taille);
 		this.listVoisin = new ArrayList<Processeur[]>();
+		tabProc = new Processeur[this.nbProc];
 		settingTacheProcesseur();
 	}
 	
@@ -63,8 +65,10 @@ public class Tabou {
 
 	public void tabou() {
 		int iter = 0;
+		affichage();
 		while(iter < this.iteration){
-			System.out.println("iteration " + iter + "*****************************");
+			//affichage();
+			System.out.println("**********iteration " + iter + "**********");
 			selectTache();
 			affichage();
 			iter++;
@@ -98,18 +102,18 @@ public class Tabou {
 	
 	public void selectTache(){
 		insertTabou();
-		//selection a processeur random
-		//int indiceProcSelect = (int)(Math.random() * (this.lproc.size() - 0));
-		int indiceProcSelect = 0;
-	
-		for(int i = 0 ; i < this.lproc.get(indiceProcSelect).getListTache().size(); ++i){
-			if(i != indiceProcSelect){
-				System.out.println(this.lproc.get(indiceProcSelect).getlTache().get(i));
-				ajouterVoisin(this.lproc.get(indiceProcSelect).getlTache().get(i), lproc);
-				this.lproc.get(indiceProcSelect).getListTache().remove(i);
-			}
-		}
+		int indiceProcSelectEmi = getProcesseurDurreMax();
+		int indiceProcSelectRecu = getProcesseurDurreMin();
+		/*while (indiceProcSelectEmi == indiceProcSelectRecu || this.lproc.get(indiceProcSelectEmi).getListTache().size() == 0){
+			indiceProcSelectEmi = (int)(Math.random() * (this.lproc.size() - 0));
+			indiceProcSelectRecu = (int)(Math.random() * (this.lproc.size() - 0));
+			
+		}*/
+
+		int indiceTacheSelect = (int)(Math.random() * (this.lproc.get(indiceProcSelectEmi).getListTache().size() - 0));
 		
+		ajouterVoisin(this.lproc.get(indiceProcSelectEmi).getlTache().get(indiceTacheSelect), indiceProcSelectEmi,indiceProcSelectRecu, lproc);
+		this.lproc.get(indiceProcSelectEmi).getListTache().remove(indiceTacheSelect);
 		
 		Processeur[] tabVoisin = new  Processeur[this.nbProc];
 		for(int i  = 0 ; i < this.nbProc ; ++i){
@@ -117,10 +121,35 @@ public class Tabou {
 					
 		}
 		this.listVoisin.add(tabVoisin);
-		updateState(tabVoisin);
+		//updateState(tabVoisin);
 		
 		
 	}
+	
+	public int getProcesseurDurreMax(){
+		int indice = 0;
+		int max = 0;
+		for(int i =0; i < this.lproc.size(); ++i){
+			if(this.lproc.get(i).getDuree() > max){
+				max = this.lproc.get(i).getDuree();
+				indice = i;
+			}
+		}
+		return indice;
+	}
+	
+	public int getProcesseurDurreMin(){
+		int indice = 0;
+		int min = this.lproc.get(0).getDuree(); ;
+		for(int i = 0; i < this.lproc.size(); ++i){
+			if(this.lproc.get(i).getDuree() <= min){
+				min = this.lproc.get(i).getDuree();
+				indice = i;
+			}
+		}
+		return indice;
+	}
+	
 	
 	public void updateState(Processeur[] tabProc){
 		this.lproc.clear();
@@ -131,16 +160,26 @@ public class Tabou {
 	}
 	
 	public void insertTabou(){
-		Processeur[] tabProc = new Processeur[this.nbProc];
 		for(int i = 0; i < nbProc ; ++i){
 			tabProc[i] = this.lproc.get(i);
 		}
 		this.listTabou.add(tabProc);
+		
+		/*for(int i = 0; i < this.listTabou.size() ; i++){
+			for(int j = 0 ; j < this.listTabou.get(i).length; ++j ){
+				System.out.println("\n Processeur tabou " + this.listTabou.get(i)[j].getNomProcesseur());
+				for(Tache t: this.listTabou.get(i)[j].getListTache() ){
+					System.out.print("	Tache tabou " + t.getNumeroTache() +": " + t.getDuree());
+				}
+				
+			}
+			System.out.println();
+		}*/
 	}
 	
-	public void ajouterVoisin(Tache tache , ArrayList<Processeur> listproc){
-		for(Processeur p : listproc){
-			p.add(tache);
+	public void ajouterVoisin(Tache tache , int i, int j, ArrayList<Processeur> listproc){
+		if(!listproc.get(j).getListTache().contains(tache)){
+			listproc.get(j).add(tache);
 		}
 	}
 	
@@ -151,7 +190,7 @@ public class Tabou {
 
 	public ArrayList<Tache> getLtache() {
 		return ltache;
-	}
+	} 
 
 	public void setLtache(ArrayList<Tache> ltache) {
 		this.ltache = ltache;
