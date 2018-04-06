@@ -10,6 +10,7 @@ public class RecuitSimule {
 	protected double temperature;
 	protected ArrayList<Processeur> lproc;
 	protected int borneInf, borneSup, nbProc, nbTache;
+	protected int pas;
 
 
 	public RecuitSimule() {
@@ -19,14 +20,20 @@ public class RecuitSimule {
 		borneSup = 10;
 		nbTache = 10;
 		nbProc = 2;
+		pas = 2;
 	}
 
 	public RecuitSimule(int temp, ArrayList<Processeur> lproc) {
 		this.temperature = temp;
 		lproc = new ArrayList<>();
 		this.lproc = lproc;
+		pas = 2;
+		borneInf=0;
+		borneSup = 10;
+		nbTache = 10;
+		nbProc = 2;
 	}	
-	
+
 	public ArrayList<Processeur> recuitSimule(int nbTache, int nbProc, int temp, int borneInf, int borneSup) {
 
 		double alpha = 0.99;
@@ -38,7 +45,7 @@ public class RecuitSimule {
 		this.borneSup = borneSup;
 		this.nbTache = nbTache;
 		this.nbProc = nbProc;
-		
+
 		//System.out.println( " bonre SUPPE " + borneSup + "    borneInf  " + borneInf);
 
 		for (int i = 0; i < this.nbProc; i++)
@@ -46,13 +53,13 @@ public class RecuitSimule {
 			this.lproc.add(new Processeur());
 			lmax.add(new Processeur());
 		}
-		
+
 		for (int i = 0; i < this.nbTache; i++)
 		{
-			
+
 			int range = this.borneSup-this.borneInf;
 			int duree = (int)(Math.random() * (range)) + this.borneInf;
-			
+
 			this.lproc.get(0).add(new Tache(duree));
 			lmax.get(0).add(new Tache(duree));
 		}
@@ -61,6 +68,7 @@ public class RecuitSimule {
 		this.temperature = temp;
 
 		double i=this.temperature;
+		int changement = 0;
 
 		while (i > 1) {
 			// Modif elementaire
@@ -75,11 +83,24 @@ public class RecuitSimule {
 			}
 			if ( objectifOptiL3(lproc) >  objectifOptiL3(lmax) ) {
 				lproc = lmax;
+				// affiche le meilleur etat tous les 3 changements
+				if ( changement == pas) {
+					System.out.println(" \n \n TACHE  A L ITERATION NUMERO   " + compteur);
+					for ( Processeur pp : lproc) {
+						System.out.println("  \n proc  avec pour duree " + pp.getDuree());
+						for ( Tache tt : pp.getListTache()) {
+							System.out.print("   Tache  " + tt.getDuree());
+						}
+					}
+					changement = 0;
+				}
+				changement++;
 			}
 			compteur++;
 			i = i*alpha; 
 		}
-		System.out.println(" Nombre d'itération recuit " + compteur);
+		
+		System.out.println("\n  \nFIN --------------------- \n Nombre d'itï¿½ration recuit " + compteur);
 		return lproc;
 	}
 
@@ -290,7 +311,7 @@ public class RecuitSimule {
 	public void setLproc(ArrayList<Processeur> lproc) {
 		this.lproc = lproc;
 	}
-	
+
 
 	public int getBorneInf() {
 		return borneInf;
